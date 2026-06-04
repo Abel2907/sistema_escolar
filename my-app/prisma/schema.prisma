@@ -5,7 +5,7 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL") // Lembre-se de que o Postgres precisa da URL de conexão aqui
+  url      = env("DATABASE_URL")
 }
 
 enum Perfil {
@@ -29,7 +29,8 @@ model usuario {
   perfil                Perfil      @default(ALUNO)
   boletinsComoAluno     boletim[]   @relation("AlunoBoletins")
   boletinsComoProfessor boletim[]   @relation("ProfessorBoletins")
-  logsAcesso            LogAcesso[]
+  logsAcesso            logAcesso[]
+  auditoria             auditoria[]
 }
 
 model boletim {
@@ -38,12 +39,19 @@ model boletim {
   nota        Int
   idAluno     String
   idProfessor String
-
   aluno     usuario @relation("AlunoBoletins", fields: [idAluno], references: [id])
   professor usuario @relation("ProfessorBoletins", fields: [idProfessor], references: [id])
 }
 
-model LogAcesso {
+model auditoria {
+  idAuditoria String @id @default(cuid())
+  dataModificacao @default(now())
+  idUsuario String 
+  usuario   usuario  @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
+
+}
+
+model logAcesso {
   id        String   @id @default(cuid())
   idUsuario String
   ip        String
