@@ -1,13 +1,54 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Get a free hosted Postgres database in seconds: `npx create-db`
-
 generator client {
-  provider = "prisma-client"
+  provider = "prisma-client-js" // Corrigido para o provedor oficial
   output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
+  url      = env("DATABASE_URL") // Lembre-se de que o Postgres precisa da URL de conexão aqui
+}
+
+enum Perfil {
+  ADMIN
+  PROFESSOR
+  ALUNO
+}
+
+enum Acao {
+  DELETOU_ALUNO
+  DELETOU_PROFESSOR
+  ADICIONOU_ALUNO
+  ADICIONOU_PROFESSOR
+  ALTEROU_NOTA
+}
+
+model usuario {
+  id                    String      @id @default(cuid())
+  email                 String      @unique
+  senha                 String
+  perfil                Perfil      @default(ALUNO)
+  boletinsComoAluno     boletim[]   @relation("AlunoBoletins")
+  boletinsComoProfessor boletim[]   @relation("ProfessorBoletins")
+  logsAcesso            LogAcesso[]
+}
+
+model boletim {
+  id          String   @id @default(cuid())
+  disciplina  String
+  nota        Int
+  idAluno     String
+  idProfessor String
+
+  aluno     usuario @relation("AlunoBoletins", fields: [idAluno], references: [id])
+  professor usuario @relation("ProfessorBoletins", fields: [idProfessor], references: [id])
+}
+
+model LogAcesso {
+  id        String   @id @default(cuid())
+  idUsuario String
+  ip        String
+  device    String
+  createdAt DateTime @default(now())
+  acao      Acao?    
+  usuario   usuario  @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
 }
