@@ -1,7 +1,7 @@
 const express = require('express');
 const bcrypt = require('bcrypt');
 const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('@prisma/client');
+const { PrismaClient } = require('../generated/prisma'); 
 
 const app = express();
 const prisma = new PrismaClient();
@@ -38,13 +38,13 @@ function checar_perfil(perfis_permitidos) {
 
 app.post('/cadastro', async (req, res) => {
     try {
-        const { nome, email, senha, funcao_user, chave_mestra } = req.body;
+        const { email, senha, funcao_user, chave_mestra } = req.body;
 
-        if (!nome || !email || !senha) {
-            return res.status(400).json({ erro: 'Nome email e senha são obrigatórios' });
+        if (!email || !senha) {
+            return res.status(400).json({ erro: 'Email e senha são obrigatórios' });
         }
 
-        const usuario_existente = await prisma.user.findUnique({ where: { email } });
+        const usuario_existente = await prisma.usuario.findUnique({ where: { email } });
         if (usuario_existente) {
             return res.status(400).json({ erro: 'Este email já está cadastrado' });
         }
@@ -65,18 +65,17 @@ app.post('/cadastro', async (req, res) => {
 
         const senha_criptografada = await bcrypt.hash(senha, 10);
 
-        const novo_usuario = await prisma.user.create({
+        const novo_usuario = await prisma.usuario.create({
             data: {
-                name: nome,
                 email: email,
-                password: senha_criptografada,
-                role: funcao_definida
+                senha: senha_criptografada,
+                perfil: funcao_definida
             }
         });
 
         res.status(201).json({ 
             mensagem: 'Usuário cadastrado com sucesso', 
-            usuario: { id: novo_usuario.id, nome: novo_usuario.name, email: novo_usuario.email, perfil: novo_usuario.role } 
+            usuario: { id: novo_usuario.id, email: novo_usuario.email, perfil: novo_usuario.perfil } 
         });
 
     } catch (error) {
