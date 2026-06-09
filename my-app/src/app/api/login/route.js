@@ -24,8 +24,16 @@ app.post('/login', async (req, res) => {
             return res.status(401).json({ erro: 'Credenciais inválidas' });
         }
 
+        await prisma.logAcesso.create({
+            data: {
+                idUsuario: usuario.id,
+                ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1',
+                device: req.headers['user-agent'] || 'Desconhecido'
+            }
+        });
+
         const token = jwt.sign(
-            { usuario_id: usuario.id, perfil: usuario.perfil }, 
+            { usuario_id: usuario.id, nome: usuario.nome, perfil: usuario.perfil }, 
             chave_secreta, 
             { expiresIn: '1h' }
         );
