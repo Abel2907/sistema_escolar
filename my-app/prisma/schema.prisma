@@ -1,0 +1,61 @@
+generator client {
+  provider = "prisma-client-js"
+  output   = "../generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+}
+
+enum Perfil {
+  ADMIN
+  PROFESSOR
+  ALUNO
+}
+
+enum Acao {
+  DELETOU_ALUNO
+  DELETOU_PROFESSOR
+  ADICIONOU_ALUNO
+  ADICIONOU_PROFESSOR
+  ALTEROU_NOTA
+}
+
+model usuario {
+  id                    String      @id @default(cuid())
+  email                 String      @unique
+  senha                 String
+  perfil                Perfil      @default(ALUNO)
+  boletinsComoAluno     boletim[]   @relation("AlunoBoletins")
+  boletinsComoProfessor boletim[]   @relation("ProfessorBoletins")
+  logsAcesso            logAcesso[]
+  auditoria             auditoria[]
+}
+
+model boletim {
+  id          String   @id @default(cuid())
+  disciplina  String
+  nota        Int
+  idAluno     String
+  idProfessor String
+  aluno     usuario @relation("AlunoBoletins", fields: [idAluno], references: [id])
+  professor usuario @relation("ProfessorBoletins", fields: [idProfessor], references: [id])
+}
+
+model auditoria {
+  idAuditoria String @id @default(cuid())
+  dataModificacao DateTime @default(now())
+  idUsuario String 
+  usuario   usuario  @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
+
+}
+
+model logAcesso {
+  id        String   @id @default(cuid())
+  idUsuario String
+  ip        String
+  device    String
+  createdAt DateTime @default(now())
+  acao      Acao?    
+  usuario   usuario  @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
+}
