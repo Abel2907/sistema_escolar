@@ -1,11 +1,10 @@
 generator client {
-  provider = "prisma-client-js" // Corrigido para o provedor oficial
+  provider = "prisma-client-js"
   output   = "../generated/prisma"
 }
 
 datasource db {
   provider = "postgresql"
-  url      = env("DATABASE_URL")
 }
 
 enum Perfil {
@@ -45,7 +44,7 @@ model boletim {
 
 model auditoria {
   idAuditoria String @id @default(cuid())
-  dataModificacao @default(now())
+  dataModificacao DateTime @default(now())
   idUsuario String 
   usuario   usuario  @relation(fields: [idUsuario], references: [id], onDelete: Cascade)
 
