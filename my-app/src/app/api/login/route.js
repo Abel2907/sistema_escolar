@@ -1,8 +1,7 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('../generated/prisma'); 
-
+import express from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '../generated/prisma';
 const app = express();
 const prisma = new PrismaClient();
 
@@ -39,7 +38,7 @@ app.post('/login', async (req, res) => {
         );
 
         res.json({ mensagem: 'Login bem-sucedido', token: `Bearer ${token}` });
-    } catch (error) {
+    } catch {
         res.status(500).json({ erro: 'Erro ao fazer login' });
     }
 });

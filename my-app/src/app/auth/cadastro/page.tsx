@@ -4,7 +4,7 @@ import { useState } from "react"
 import CadastroInput from "@/src/app/components/input/cadastroinput"
 import Link from "next/link"
 
-export default function Login() {
+export default function Cadastro() {
     const [perfil, setPerfil] = useState("ALUNO")
     const [abrirPerfil, setAbrirPerfil] = useState(false)
 
@@ -14,13 +14,14 @@ export default function Login() {
                 <div className="flex flex-col items-center mb-10">
                     <i className="bi bi-person-circle text-blue-400 text-8xl"></i>
                     <h2 className="text-3xl font-semibold mt-4">
-                        Log-in
+                        Cadastre-se
                     </h2>
                     <p className="text-gray-500 text-sm mt-2">
-                        Bem-vindo(a) de volta
+                        Crie sua conta para continuar
                     </p>
                 </div>
                 <form className="flex flex-col gap-2">
+
                     <div className="relative mx-6">
                         <button
                             type="button"
@@ -36,10 +37,17 @@ export default function Login() {
                                         : "Administrador"
                                 }
                             </span>
-                            <i className={`bi ${abrirPerfil ? "bi-chevron-up" : "bi-chevron-down"}`}></i>
+                            <i
+                                className={`bi ${
+                                    abrirPerfil
+                                        ? "bi-chevron-up"
+                                        : "bi-chevron-down"
+                                }`}
+                            />
                         </button>
                         {abrirPerfil && (
-                            <div className="absolute z-10 w-full bg-white border rounded-lg shadow-md mt-2 overflow-hidden">
+                            <div className="absolute z-10 w-full mt-2 bg-white border rounded-lg shadow-md overflow-hidden">
+
                                 <button
                                     type="button"
                                     className="w-full text-left px-4 py-3 hover:bg-gray-100"
@@ -50,6 +58,7 @@ export default function Login() {
                                 >
                                     Aluno
                                 </button>
+
                                 <button
                                     type="button"
                                     className="w-full text-left px-4 py-3 hover:bg-gray-100"
@@ -60,6 +69,7 @@ export default function Login() {
                                 >
                                     Professor
                                 </button>
+
                                 <button
                                     type="button"
                                     className="w-full text-left px-4 py-3 hover:bg-gray-100"
@@ -94,16 +104,17 @@ export default function Login() {
                         type="submit"
                         className="mt-6 h-12 rounded-2xl bg-gray-900 text-white hover:opacity-90 transition"
                     >
-                        Entrar
+                        Cadastrar
                     </button>
+
                     <div className="text-center text-gray-600 mt-6">
-                        Não possui uma conta?
+                        Já possui uma conta?
 
                         <Link
-                            href="/auth/cadastro"
+                            href="/auth/login"
                             className="ml-1 text-emerald-700 hover:underline"
                         >
-                            Cadastre-se
+                            Entrar
                         </Link>
                     </div>
                 </form>

@@ -9,7 +9,7 @@ export default function Header() {
 
       <ul className="flex gap-8 mx-left p-10 pl-6 text-blue-200">
         <li>
-          <Link href="/cadastro" className="hover:text-cyan-200 hover:underline transition-all">
+          <Link href="/auth/cadastro" className="hover:text-cyan-200 hover:underline transition-all">
             Cadastro
           </Link>
         </li>

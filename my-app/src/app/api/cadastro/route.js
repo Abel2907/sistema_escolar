@@ -1,7 +1,7 @@
-const express = require('express');
-const bcrypt = require('bcrypt');
-const jwt = require('jsonwebtoken');
-const { PrismaClient } = require('../generated/prisma'); 
+import express from 'express';
+import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
+import { PrismaClient } from '../generated/prisma';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -30,6 +30,7 @@ function checar_perfil(perfis_permitidos) {
             }
 
             next();
+        // eslint-disable-next-line @typescript-eslint/no-unused-vars
         } catch (error) {
             return res.status(401).json({ erro: 'Token inválido ou expirado' });
         }
@@ -78,7 +79,7 @@ app.post('/cadastro', async (req, res) => {
             usuario: { id: novo_usuario.id, email: novo_usuario.email, perfil: novo_usuario.perfil } 
         });
 
-    } catch (error) {
+    } catch {
         res.status(500).json({ erro: 'Erro ao cadastrar usuário' });
     }
 });
