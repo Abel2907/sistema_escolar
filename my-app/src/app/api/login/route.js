@@ -43,4 +43,11 @@ app.post('/login', async (req, res) => {
     }
 });
 
+app.delete('/logout', (req, res) => {
+    res.json({ 
+        sucesso: true,
+        mensagem: 'Logout bem-sucedido' 
+    });
+});
+
 app.listen(3001, () => console.log('Servidor de Login ativo na porta 3001'));
