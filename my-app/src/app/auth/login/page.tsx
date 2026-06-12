@@ -90,12 +90,13 @@ export default function Login() {
                         type="password"
                         placeholder="exeMpL095@"
                     />
-                    <button
-                        type="submit"
+                    <Link
+                       // type="submit"
+                        href="../../dashboards/aluno"
                         className="mt-6 h-12 rounded-2xl bg-gray-900 text-white hover:opacity-90 transition"
                     >
                         Entrar
-                    </button>
+                    </Link>
                     <div className="text-center text-gray-600 mt-6">
                         Não possui uma conta?
 
