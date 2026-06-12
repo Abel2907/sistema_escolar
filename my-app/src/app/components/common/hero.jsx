@@ -8,7 +8,8 @@ export default function Hero() {
 
                 <p className="text-blue-300">Acompanhe sua carreira Estudantil aqui!</p>
              <Link
-                href="/auth/login"
+             //TROCAR PARA "/auth/login/" depois
+                href="auth/authTEMPORARIO"
                 className=" rounded-2xl bg-cyan-200 text-blue-400 font-semibold text-sm px-6 py-3 "
                     >  
                     Entrar

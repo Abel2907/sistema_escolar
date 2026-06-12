@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import CadastroInput from "@/src/app/components/input/cadastroinput"
+import CadastroInput from "@/src/app/components/input/FormInput"
 import Link from "next/link"
 
 export default function Login() {
