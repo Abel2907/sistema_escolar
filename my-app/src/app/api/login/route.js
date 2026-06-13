@@ -37,7 +37,7 @@ app.post('/login', async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        res.json({ mensagem: 'Login bem-sucedido', token: `Bearer ${token}` });
+        res.json({ mensagem: 'Login bem-sucedido', token: `Bearer ${token}`, perfil: usoario.perfil});
     } catch {
         res.status(500).json({ erro: 'Erro ao fazer login' });
     }

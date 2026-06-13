@@ -88,4 +88,6 @@ app.post('/professor/notas', checar_perfil(['PROFESSOR', 'ADMIN']), (req, res) =
     res.json({ mensagem: 'Acesso autorizado para lançar notas' });
 });
 
-app.listen(3000, () => console.log('Servidor de Cadastro ativo na porta 3000'));
+app.listen(3001, () =>
+  console.log("Servidor de Cadastro ativo na porta 3001")
+);

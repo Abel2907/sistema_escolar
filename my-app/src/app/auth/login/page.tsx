@@ -1,5 +1,5 @@
 "use client"
-
+import { useRouter } from "next/navigation"
 import { useState } from "react"
 import CadastroInput from "@/src/app/components/input/FormInput"
 import Link from "next/link"
@@ -7,6 +7,57 @@ import Link from "next/link"
 export default function Login() {
     const [perfil, setPerfil] = useState("ALUNO")
     const [abrirPerfil, setAbrirPerfil] = useState(false)
+    const [senha, setSenha] = useState("")
+    const [email, setEmail] = useState("")
+    const router = useRouter()
+    const handleEmailChange = (
+    e: React.ChangeEvent<HTMLInputElement>
+) => {
+    setEmail(e.target.value);
+};
+
+    const handleSenhaChange = (
+        e: React.ChangeEvent<HTMLInputElement>
+    ) => {
+        setSenha(e.target.value);
+    };
+
+async function fazerLogin() {
+try {
+    const resposta = await fetch(
+         "http://localhost:3001/login", { 
+            method: "POST",
+            headers: {
+                "Content-Type" : "application/json",
+            },
+            body: JSON.stringify({
+                email,
+                senha,
+         }),
+         }
+    )
+    const dados = await resposta.json()
+    if(!resposta.ok){
+        alert("erro ao conectar")
+        return
+    }
+
+    localStorage.setItem("token", dados.token)
+
+
+        if (perfil === "ADMIN") {
+            router.push("/dashboards/admin")
+        } else if (perfil === "PROFESSOR") {
+            router.push("/dashboards/professor")
+        } else {
+            router.push("/dashboards/aluno")
+        }
+    } catch (erro) {
+        console.error(erro)
+         alert("Erro ao conectar ao servidor")
+    }
+}
+
 
     return (
         <main className="min-h-screen flex items-center justify-center px-4">
@@ -20,7 +71,8 @@ export default function Login() {
                         Bem-vindo(a) de volta
                     </p>
                 </div>
-                <form className="flex flex-col gap-2">
+                <form onSubmit={fazerLogin}
+                 className="flex flex-col gap-2">
                     <div className="relative mx-6">
                         <button
                             type="button"
@@ -83,20 +135,24 @@ export default function Login() {
                         id="id-email"
                         type="email"
                         placeholder="exemplo@gmail.com"
+                        value = {email}
+                         onChange={handleEmailChange}
                     />
+                    
                     <CadastroInput
                         nameLabel="Senha"
-                        id="id-senha"
+                        id="id.senha"
                         type="password"
                         placeholder="exeMpL095@"
+                        value={senha}
+                        onChange={handleSenhaChange}
                     />
-                    <Link
-                       // type="submit"
-                        href="../../dashboards/aluno"
+                    <button
+                       type="submit"
                         className="mt-6 h-12 rounded-2xl bg-gray-900 text-white hover:opacity-90 transition"
                     >
                         Entrar
-                    </Link>
+                    </button>
                     <div className="text-center text-gray-600 mt-6">
                         Não possui uma conta?
 

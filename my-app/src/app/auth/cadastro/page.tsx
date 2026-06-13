@@ -1,13 +1,48 @@
 "use client"
 
-import { useState } from "react"
-import CadastroInput from "@/src/app/components/input/FormInput"
+import { SetStateAction, useState } from "react"
+import CadastroInput from "@/src/app/components/input/CadastroInput"
 import Link from "next/link"
 
 export default function Cadastro() {
     const [perfil, setPerfil] = useState("ALUNO")
     const [abrirPerfil, setAbrirPerfil] = useState(false)
+    const [email, setEmail] = useState("");
+    const [senha, setSenha] = useState("");
+    const [chaveMestra, setChaveMestra] = useState("");
 
+async function fazerCadastro(
+  e: React.FormEvent<HTMLFormElement>
+) {
+  e.preventDefault();
+
+  try {
+    const resposta = await fetch(
+    "http://localhost:3001/cadastro",
+    {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+        },
+        body: JSON.stringify({
+            email,
+            senha,
+            funcao_user: perfil,
+            chave_mestra: chaveMestra,
+        }),
+    }
+);
+  const dados = await resposta.json();
+  if(!resposta.ok){
+    alert("erro ao conectar")
+    return;
+  }
+
+      alert(dados.mensagem);
+  } catch {
+    alert("erro ao conectar com o servidor")
+  }
+}
     return (
         <main className="min-h-screen flex items-center justify-center px-4">
             <section className="w-full max-w-md">
@@ -20,7 +55,7 @@ export default function Cadastro() {
                         Crie sua conta para continuar
                     </p>
                 </div>
-                <form className="flex flex-col gap-2">
+                <form onSubmit={fazerCadastro} className="flex flex-col gap-2">
 
                     <div className="relative mx-6">
                         <button
@@ -93,13 +128,33 @@ export default function Cadastro() {
                         id="id-email"
                         type="email"
                         placeholder="exemplo@gmail.com"
+                        value ={email}
+                         onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                        setEmail(e.target.value)
+}
                     />
                     <CadastroInput
                         nameLabel="Senha"
                         id="id-senha"
                         type="password"
                         placeholder="exeMpL095@"
+                        value={senha}
+                       onChange={(e: React.ChangeEvent<HTMLInputElement>) =>
+                       setSenha(e.target.value)
+}
                     />
+
+                        {perfil !== "ALUNO" && (
+        <CadastroInput
+            nameLabel="Chave Mestra"
+            id="id-chave"
+            type="password"
+            placeholder="Digite a chave"
+            value={chaveMestra}
+            onChange={(e: { target: { value: SetStateAction<string> } }) => setChaveMestra(e.target.value)}
+        />
+    )}
+
                     <button
                         type="submit"
                         className="mt-6 h-12 rounded-2xl bg-gray-900 text-white hover:opacity-90 transition"
