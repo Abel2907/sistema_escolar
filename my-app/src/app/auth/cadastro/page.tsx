@@ -3,8 +3,10 @@
 import { SetStateAction, useState } from "react"
 import CadastroInput from "@/src/app/components/input/CadastroInput"
 import Link from "next/link"
+import { useRouter } from "next/navigation"
 
 export default function Cadastro() {
+    const router = useRouter()
     const [perfil, setPerfil] = useState("ALUNO")
     const [abrirPerfil, setAbrirPerfil] = useState(false)
     const [email, setEmail] = useState("");
@@ -18,7 +20,7 @@ async function fazerCadastro(
 
   try {
     const resposta = await fetch(
-    "http://localhost:3001/cadastro",
+    "http://localhost:3002/cadastro",
     {
         method: "POST",
         headers: {
@@ -34,11 +36,12 @@ async function fazerCadastro(
 );
   const dados = await resposta.json();
   if(!resposta.ok){
-    alert("erro ao conectar")
+    alert(dados.erro || "Erro ao cadastrar")
     return;
   }
 
       alert(dados.mensagem);
+      router.push("/auth/login")
   } catch {
     alert("erro ao conectar com o servidor")
   }

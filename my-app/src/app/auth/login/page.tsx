@@ -22,7 +22,8 @@ export default function Login() {
         setSenha(e.target.value);
     };
 
-async function fazerLogin() {
+async function fazerLogin(e: React.FormEvent<HTMLFormElement>) {
+e.preventDefault();
 try {
     const resposta = await fetch(
          "http://localhost:3001/login", { 
@@ -38,16 +39,15 @@ try {
     )
     const dados = await resposta.json()
     if(!resposta.ok){
-        alert("erro ao conectar")
+        alert(dados.erro || "Erro ao fazer login")
         return
     }
 
     localStorage.setItem("token", dados.token)
 
-
-        if (perfil === "ADMIN") {
+        if (dados.perfil === "ADMIN") {
             router.push("/dashboards/admin")
-        } else if (perfil === "PROFESSOR") {
+        } else if (dados.perfil === "PROFESSOR") {
             router.push("/dashboards/professor")
         } else {
             router.push("/dashboards/aluno")
