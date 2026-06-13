@@ -1,21 +1,31 @@
-import Link from "next/link"
+import Link from "next/link";
 
-export default function Header() {  
+export default function Header({ onToggleSidebar }) {
   return (
-    <header className="tixed top-0 bg-blue-950 flex justify-between h-20">
-      <div className="text-blue-100 text-2xl p-2 pl-7">
-        <h1 className="font-sans p-2 mx-8">Aluno-ON</h1>
+    <header className="fixed top-0 bg-blue-950 flex items-center justify-between h-20 w-full px-6">
+      
+      <div className="flex items-center gap-4">
+        <button
+          onClick={onToggleSidebar}
+          className="p-4 text-blue-200 text-2xl"
+        >
+          ☰
+        </button>
+
+        <div className="text-blue-100 text-2xl">
+          <h1 className="font-sans">Aluno-ON</h1>
+        </div>
       </div>
 
-      <button className=" flex p-3">
-        <li>
-          <Link href="/auth/app" className=" text-blue-200 p-2 text-lg flex mx-8 hover:text-cyan-200  no-underline hover:underline transition-all bg-red-950">
-            Log-out
-          </Link>
-        </li>
- 
-      </button>
+      <div className="flex items-center">
+        <Link
+          href="/auth/app"
+          className="text-blue-200 text-lg hover:text-cyan-200 hover:underline transition-all"
+        >
+          Log-out
+        </Link>
+      </div>
+
     </header>
   );
 }
-
