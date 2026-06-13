@@ -1,33 +1,30 @@
-import express from 'express';
+import { NextResponse } from 'next/server';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
 import { PrismaClient } from '@prisma/client';
-const app = express();
+
 const prisma = new PrismaClient();
-
-app.use(express.json());
-
 const chave_secreta = 'chavoso_secret';
 
-app.post('/login', async (req, res) => {
+export async function POST(request) {
     try {
-        const { email, senha } = req.body;
+        const { email, senha } = await request.json();
 
         const usuario = await prisma.usuario.findUnique({ where: { email } });
         if (!usuario) {
-            return res.status(401).json({ erro: 'Credenciais inválidas' });
+            return NextResponse.json({ erro: 'Credenciais inválidas' }, { status: 401 });
         }
 
         const senha_valida = await bcrypt.compare(senha, usuario.senha);
         if (!senha_valida) {
-            return res.status(401).json({ erro: 'Credenciais inválidas' });
+            return NextResponse.json({ erro: 'Credenciais inválidas' }, { status: 401 });
         }
 
         await prisma.logAcesso.create({
             data: {
                 idUsuario: usuario.id,
-                ip: req.headers['x-forwarded-for'] || req.socket.remoteAddress || '127.0.0.1',
-                device: req.headers['user-agent'] || 'Desconhecido'
+                ip: request.headers.get('x-forwarded-for') || '127.0.0.1',
+                device: request.headers.get('user-agent') || 'Desconhecido'
             }
         });
 
@@ -37,17 +34,19 @@ app.post('/login', async (req, res) => {
             { expiresIn: '1h' }
         );
 
-        res.json({ mensagem: 'Login bem-sucedido', token: `Bearer ${token}`, perfil: usuario.perfil});
+        return NextResponse.json({ 
+            mensagem: 'Login bem-sucedido', 
+            token: `Bearer ${token}`, 
+            perfil: usuario.perfil 
+        });
     } catch {
-        res.status(500).json({ erro: 'Erro ao fazer login' });
+        return NextResponse.json({ erro: 'Erro ao fazer login' }, { status: 500 });
     }
-});
+}
 
-app.delete('/logout', (req, res) => {
-    res.json({ 
+export async function DELETE() {
+    return NextResponse.json({ 
         sucesso: true,
         mensagem: 'Logout bem-sucedido' 
     });
-});
-
-app.listen(3001, () => console.log('Servidor de Login ativo na porta 3001'));
+}

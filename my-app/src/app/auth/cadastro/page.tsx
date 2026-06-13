@@ -20,7 +20,7 @@ async function fazerCadastro(
 
   try {
     const resposta = await fetch(
-    "http://localhost:3002/cadastro",
+    "/api/cadastro",
     {
         method: "POST",
         headers: {
