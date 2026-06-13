@@ -1,7 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 
 const app = express();
 const prisma = new PrismaClient();
@@ -88,6 +88,6 @@ app.post('/professor/notas', checar_perfil(['PROFESSOR', 'ADMIN']), (req, res) =
     res.json({ mensagem: 'Acesso autorizado para lançar notas' });
 });
 
-app.listen(3001, () =>
-  console.log("Servidor de Cadastro ativo na porta 3001")
+app.listen(3002, () =>
+  console.log("Servidor de Cadastro ativo na porta 3002")
 );

@@ -1,7 +1,7 @@
 import express from 'express';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
-import { PrismaClient } from '../generated/prisma';
+import { PrismaClient } from '@prisma/client';
 const app = express();
 const prisma = new PrismaClient();
 
@@ -32,12 +32,12 @@ app.post('/login', async (req, res) => {
         });
 
         const token = jwt.sign(
-            { usuario_id: usuario.id, nome: usuario.nome, perfil: usuario.perfil }, 
+            { usuario_id: usuario.id, perfil: usuario.perfil }, 
             chave_secreta, 
             { expiresIn: '1h' }
         );
 
-        res.json({ mensagem: 'Login bem-sucedido', token: `Bearer ${token}`, perfil: usoario.perfil});
+        res.json({ mensagem: 'Login bem-sucedido', token: `Bearer ${token}`, perfil: usuario.perfil});
     } catch {
         res.status(500).json({ erro: 'Erro ao fazer login' });
     }
